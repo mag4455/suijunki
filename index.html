@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>水準器</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <p class="eyebrow">SPIRIT LEVEL</p>
+      <h1>水準器</h1>
+    </header>
+
+    <div class="tool">
+      <span class="screw tl"></span><span class="screw tr"></span>
+      <span class="screw bl"></span><span class="screw br"></span>
+
+      <section class="vial-row" data-axis="x">
+        <div class="vial-label">
+          <span class="vial-name">左右</span>
+          <span class="vial-sub">ROLL</span>
+        </div>
+        <div class="vial horizontal" id="vialX">
+          <div class="vial-center-marks"></div>
+          <div class="bubble" id="bubbleX"></div>
+        </div>
+        <div class="readout" id="readoutX">--.-°</div>
+      </section>
+
+      <section class="vial-row" data-axis="y">
+        <div class="vial-label">
+          <span class="vial-name">前後</span>
+          <span class="vial-sub">PITCH</span>
+        </div>
+        <div class="vial horizontal" id="vialY">
+          <div class="vial-center-marks"></div>
+          <div class="bubble" id="bubbleY"></div>
+        </div>
+        <div class="readout" id="readoutY">--.-°</div>
+      </section>
+
+      <section class="vial-row vertical-row" data-axis="z">
+        <div class="vial-label">
+          <span class="vial-name">垂直</span>
+          <span class="vial-sub">PLUMB</span>
+        </div>
+        <div class="vial vertical" id="vialZ">
+          <div class="vial-center-marks"></div>
+          <div class="bubble" id="bubbleZ"></div>
+        </div>
+        <div class="readout" id="readoutZ">--.-°</div>
+      </section>
+    </div>
+
+    <div class="controls">
+      <button id="startBtn" class="btn primary">センサーを開始</button>
+      <div class="control-pair" id="calibControls" hidden>
+        <button id="calibBtn" class="btn ghost">この姿勢でゼロ調整</button>
+        <button id="resetBtn" class="btn ghost">校正リセット</button>
+      </div>
+      <p class="status" id="status">ボタンを押してセンサーへのアクセスを許可してください。</p>
+    </div>
+
+    <p class="hint">水平を測るときはスマホを平らな面に置いて左右・前後のチューブを確認。垂直(プラム)を測るときはスマホを壁や柱に立てかけて確認してください。</p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
