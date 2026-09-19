@@ -113,6 +113,11 @@ h1 {
   min-height: 150px;
 }
 
+.cross-row {
+  grid-template-columns: 64px auto 78px;
+  justify-content: space-between;
+}
+
 .vial-label {
   display: flex;
   flex-direction: column;
@@ -134,14 +139,15 @@ h1 {
 
 .vial {
   position: relative;
-  background: linear-gradient(180deg, var(--ink-2), var(--ink));
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08);
-  overflow: hidden;
 }
 
-.vial.horizontal {
-  height: 46px;
+/* 共通のガラス管(チューブ)スタイル。単独の垂直バイアルと、十字バイアルの2本の腕で共用 */
+.tube {
+  position: relative;
+  background: linear-gradient(180deg, var(--ink-2), var(--ink));
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08);
   border-radius: 999px;
+  overflow: hidden;
 }
 
 .vial.vertical {
@@ -150,36 +156,71 @@ h1 {
   min-height: 150px;
   border-radius: 999px;
   justify-self: center;
+  background: linear-gradient(180deg, var(--ink-2), var(--ink));
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
 }
 
-.vial-center-marks {
+.center-marks {
   position: absolute;
   inset: 0;
 }
 
-.vial.horizontal .vial-center-marks::before,
-.vial.horizontal .vial-center-marks::after {
+.tube.h .center-marks::before,
+.tube.h .center-marks::after,
+.vial.vertical .center-marks::before,
+.vial.vertical .center-marks::after {
   content: "";
   position: absolute;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.tube.h .center-marks::before,
+.tube.h .center-marks::after {
   top: 6px;
   bottom: 6px;
   width: 2px;
-  background: rgba(255, 255, 255, 0.28);
 }
-.vial.horizontal .vial-center-marks::before { left: calc(50% - 11px); }
-.vial.horizontal .vial-center-marks::after { left: calc(50% + 9px); }
+.tube.h .center-marks::before { left: calc(50% - 11px); }
+.tube.h .center-marks::after { left: calc(50% + 9px); }
 
-.vial.vertical .vial-center-marks::before,
-.vial.vertical .vial-center-marks::after {
-  content: "";
-  position: absolute;
+.tube.v .center-marks::before,
+.tube.v .center-marks::after,
+.vial.vertical .center-marks::before,
+.vial.vertical .center-marks::after {
   left: 6px;
   right: 6px;
   height: 2px;
-  background: rgba(255, 255, 255, 0.28);
 }
-.vial.vertical .vial-center-marks::before { top: calc(50% - 11px); }
-.vial.vertical .vial-center-marks::after { top: calc(50% + 9px); }
+.tube.v .center-marks::before,
+.vial.vertical .center-marks::before { top: calc(50% - 11px); }
+.tube.v .center-marks::after,
+.vial.vertical .center-marks::after { top: calc(50% + 9px); }
+
+/* 十字バイアル: 水平・垂直2本のチューブを重ねて1つの気泡が2軸を示す */
+.vial.cross {
+  width: clamp(140px, 42vw, 168px);
+  height: clamp(140px, 42vw, 168px);
+  justify-self: center;
+}
+
+.vial.cross .tube.h {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 46px;
+  transform: translateY(-50%);
+}
+
+.vial.cross .tube.v {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 46px;
+  transform: translateX(-50%);
+}
 
 .bubble {
   position: absolute;
@@ -190,15 +231,6 @@ h1 {
   transition: transform 0.15s ease-out, box-shadow 0.2s ease-out;
 }
 
-.vial.horizontal .bubble {
-  top: 4px;
-  bottom: 4px;
-  left: 50%;
-  width: 38px;
-  margin-left: -19px;
-  transform: translateX(0);
-}
-
 .vial.vertical .bubble {
   left: 4px;
   right: 4px;
@@ -206,6 +238,16 @@ h1 {
   height: 38px;
   margin-top: -19px;
   transform: translateY(0);
+}
+
+.vial.cross .bubble {
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  margin: -18px;
+  transform: translate(0, 0);
+  z-index: 1;
 }
 
 .vial-row.is-level .vial .bubble {
@@ -226,6 +268,31 @@ h1 {
 }
 
 .vial-row.is-level .readout {
+  color: #3a6b12;
+}
+
+.readout-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.readout-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+}
+
+.mini-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgba(42, 34, 5, 0.6);
+}
+
+.readout.ok {
   color: #3a6b12;
 }
 

@@ -4,17 +4,15 @@ const calibBtn = document.getElementById('calibBtn');
 const resetBtn = document.getElementById('resetBtn');
 const statusEl = document.getElementById('status');
 
-const rowX = document.querySelector('.vial-row[data-axis="x"]');
-const rowY = document.querySelector('.vial-row[data-axis="y"]');
+const rowXY = document.querySelector('.vial-row[data-axis="xy"]');
 const rowZ = document.querySelector('.vial-row[data-axis="z"]');
-const bubbleX = document.getElementById('bubbleX');
-const bubbleY = document.getElementById('bubbleY');
+const bubbleXY = document.getElementById('bubbleXY');
 const bubbleZ = document.getElementById('bubbleZ');
 const readoutX = document.getElementById('readoutX');
 const readoutY = document.getElementById('readoutY');
 const readoutZ = document.getElementById('readoutZ');
 
-const HORIZONTAL_TRAVEL_PX = 55;
+const CROSS_TRAVEL_PX = 45;
 const VERTICAL_TRAVEL_PX = 55;
 const ANGLE_FOR_FULL_TRAVEL = 12;
 const LEVEL_TOLERANCE_DEG = 0.5;
@@ -50,20 +48,29 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function setVial(bubbleEl, readoutEl, rowEl, angleDeg, travelPx, axis) {
-  const displayAngle = clamp(angleDeg, -90, 90);
-  const ratio = clamp(displayAngle / ANGLE_FOR_FULL_TRAVEL, -1, 1);
-  const offset = -ratio * travelPx;
+function angleToOffset(angleDeg, travelPx) {
+  const ratio = clamp(angleDeg / ANGLE_FOR_FULL_TRAVEL, -1, 1);
+  return -ratio * travelPx;
+}
 
-  if (axis === 'horizontal') {
-    bubbleEl.style.transform = `translateX(${offset.toFixed(1)}px)`;
-  } else {
-    bubbleEl.style.transform = `translateY(${offset.toFixed(1)}px)`;
-  }
-
+function setReadout(readoutEl, angleDeg) {
   const sign = angleDeg > 0 ? '+' : '';
   readoutEl.textContent = `${sign}${angleDeg.toFixed(1)}°`;
+  readoutEl.classList.toggle('ok', Math.abs(angleDeg) < LEVEL_TOLERANCE_DEG);
+}
 
+function setCrossVial(bubbleEl, rowEl, rollAngle, pitchAngle) {
+  const offsetX = angleToOffset(rollAngle, CROSS_TRAVEL_PX);
+  const offsetY = angleToOffset(pitchAngle, CROSS_TRAVEL_PX);
+  bubbleEl.style.transform = `translate(${offsetX.toFixed(1)}px, ${offsetY.toFixed(1)}px)`;
+
+  const isLevel = Math.abs(rollAngle) < LEVEL_TOLERANCE_DEG && Math.abs(pitchAngle) < LEVEL_TOLERANCE_DEG;
+  rowEl.classList.toggle('is-level', isLevel);
+}
+
+function setVial(bubbleEl, readoutEl, rowEl, angleDeg, travelPx) {
+  bubbleEl.style.transform = `translateY(${angleToOffset(angleDeg, travelPx).toFixed(1)}px)`;
+  setReadout(readoutEl, angleDeg);
   rowEl.classList.toggle('is-level', Math.abs(angleDeg) < LEVEL_TOLERANCE_DEG);
 }
 
@@ -79,9 +86,10 @@ function handleOrientation(event) {
   const pitchAngle = event.beta - calibration.beta;
   const plumbAngle = (event.beta - 90) - calibration.beta;
 
-  setVial(bubbleX, readoutX, rowX, rollAngle, HORIZONTAL_TRAVEL_PX, 'horizontal');
-  setVial(bubbleY, readoutY, rowY, pitchAngle, HORIZONTAL_TRAVEL_PX, 'horizontal');
-  setVial(bubbleZ, readoutZ, rowZ, plumbAngle, VERTICAL_TRAVEL_PX, 'vertical');
+  setCrossVial(bubbleXY, rowXY, rollAngle, pitchAngle);
+  setReadout(readoutX, rollAngle);
+  setReadout(readoutY, pitchAngle);
+  setVial(bubbleZ, readoutZ, rowZ, plumbAngle, VERTICAL_TRAVEL_PX);
 }
 
 function startLevel() {

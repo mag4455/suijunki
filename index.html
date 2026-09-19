@@ -17,28 +17,26 @@
       <span class="screw tl"></span><span class="screw tr"></span>
       <span class="screw bl"></span><span class="screw br"></span>
 
-      <section class="vial-row" data-axis="x">
+      <section class="vial-row cross-row" data-axis="xy">
         <div class="vial-label">
-          <span class="vial-name">左右</span>
-          <span class="vial-sub">ROLL</span>
+          <span class="vial-name">水平</span>
+          <span class="vial-sub">ROLL / PITCH</span>
         </div>
-        <div class="vial horizontal" id="vialX">
-          <div class="vial-center-marks"></div>
-          <div class="bubble" id="bubbleX"></div>
+        <div class="vial cross" id="vialXY">
+          <div class="tube h"><div class="center-marks"></div></div>
+          <div class="tube v"><div class="center-marks"></div></div>
+          <div class="bubble" id="bubbleXY"></div>
         </div>
-        <div class="readout" id="readoutX">--.-°</div>
-      </section>
-
-      <section class="vial-row" data-axis="y">
-        <div class="vial-label">
-          <span class="vial-name">前後</span>
-          <span class="vial-sub">PITCH</span>
+        <div class="readout-pair">
+          <div class="readout-item">
+            <span class="mini-label">左右</span>
+            <span class="readout" id="readoutX">--.-°</span>
+          </div>
+          <div class="readout-item">
+            <span class="mini-label">前後</span>
+            <span class="readout" id="readoutY">--.-°</span>
+          </div>
         </div>
-        <div class="vial horizontal" id="vialY">
-          <div class="vial-center-marks"></div>
-          <div class="bubble" id="bubbleY"></div>
-        </div>
-        <div class="readout" id="readoutY">--.-°</div>
       </section>
 
       <section class="vial-row vertical-row" data-axis="z">
@@ -47,7 +45,7 @@
           <span class="vial-sub">PLUMB</span>
         </div>
         <div class="vial vertical" id="vialZ">
-          <div class="vial-center-marks"></div>
+          <div class="center-marks"></div>
           <div class="bubble" id="bubbleZ"></div>
         </div>
         <div class="readout" id="readoutZ">--.-°</div>
@@ -63,7 +61,7 @@
       <p class="status" id="status">ボタンを押してセンサーへのアクセスを許可してください。</p>
     </div>
 
-    <p class="hint">水平を測るときはスマホを平らな面に置いて左右・前後のチューブを確認。垂直(プラム)を測るときはスマホを壁や柱に立てかけて確認してください。</p>
+    <p class="hint">水平を測るときはスマホを平らな面に置いて、十字の気泡が中央に来るか確認。垂直(プラム)を測るときはスマホを壁や柱に立てかけて確認してください。</p>
   </div>
 
   <script src="app.js"></script>
