@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>水準器</title>
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
   <div class="app">
@@ -17,14 +17,14 @@
       <span class="screw tl"></span><span class="screw tr"></span>
       <span class="screw bl"></span><span class="screw br"></span>
 
-      <section class="vial-row cross-row" data-axis="xy">
+      <section class="vial-row round-row" data-axis="xy">
         <div class="vial-label">
           <span class="vial-name">水平</span>
           <span class="vial-sub">ROLL / PITCH</span>
         </div>
-        <div class="vial cross" id="vialXY">
-          <div class="tube h"><div class="center-marks"></div></div>
-          <div class="tube v"><div class="center-marks"></div></div>
+        <div class="vial round" id="vialXY">
+          <div class="crosshair"></div>
+          <div class="ring-target"></div>
           <div class="bubble" id="bubbleXY"></div>
         </div>
         <div class="readout-pair">
@@ -61,9 +61,9 @@
       <p class="status" id="status">ボタンを押してセンサーへのアクセスを許可してください。</p>
     </div>
 
-    <p class="hint">水平を測るときはスマホを平らな面に置いて、十字の気泡が中央に来るか確認。垂直(プラム)を測るときはスマホを壁や柱に立てかけて確認してください。</p>
+    <p class="hint">水平を測るときはスマホを平らな面に置いて、丸い気泡が中央の輪に入るか確認。垂直(プラム)を測るときはスマホを壁や柱に立てかけて確認してください。</p>
   </div>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

@@ -113,7 +113,7 @@ h1 {
   min-height: 150px;
 }
 
-.cross-row {
+.round-row {
   grid-template-columns: 64px auto 78px;
   justify-content: space-between;
 }
@@ -141,15 +141,6 @@ h1 {
   position: relative;
 }
 
-/* 共通のガラス管(チューブ)スタイル。単独の垂直バイアルと、十字バイアルの2本の腕で共用 */
-.tube {
-  position: relative;
-  background: linear-gradient(180deg, var(--ink-2), var(--ink));
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
 .vial.vertical {
   width: 46px;
   height: 100%;
@@ -166,60 +157,59 @@ h1 {
   inset: 0;
 }
 
-.tube.h .center-marks::before,
-.tube.h .center-marks::after,
 .vial.vertical .center-marks::before,
 .vial.vertical .center-marks::after {
   content: "";
   position: absolute;
-  background: rgba(255, 255, 255, 0.28);
-}
-
-.tube.h .center-marks::before,
-.tube.h .center-marks::after {
-  top: 6px;
-  bottom: 6px;
-  width: 2px;
-}
-.tube.h .center-marks::before { left: calc(50% - 11px); }
-.tube.h .center-marks::after { left: calc(50% + 9px); }
-
-.tube.v .center-marks::before,
-.tube.v .center-marks::after,
-.vial.vertical .center-marks::before,
-.vial.vertical .center-marks::after {
   left: 6px;
   right: 6px;
   height: 2px;
+  background: rgba(255, 255, 255, 0.28);
 }
-.tube.v .center-marks::before,
 .vial.vertical .center-marks::before { top: calc(50% - 11px); }
-.tube.v .center-marks::after,
 .vial.vertical .center-marks::after { top: calc(50% + 9px); }
 
-/* 十字バイアル: 水平・垂直2本のチューブを重ねて1つの気泡が2軸を示す */
-.vial.cross {
-  width: clamp(140px, 42vw, 168px);
-  height: clamp(140px, 42vw, 168px);
+/* 円形バイアル(バブルレベル): 気泡が2軸方向へ丸い皿の中を自由に動く */
+.vial.round {
+  width: clamp(150px, 44vw, 180px);
+  height: clamp(150px, 44vw, 180px);
   justify-self: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--ink-2), var(--ink) 72%);
+  box-shadow: inset 0 3px 12px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
 }
 
-.vial.cross .tube.h {
+.vial.round .crosshair::before,
+.vial.round .crosshair::after {
+  content: "";
   position: absolute;
+  background: rgba(255, 255, 255, 0.16);
+}
+.vial.round .crosshair::before {
   top: 50%;
-  left: 0;
-  width: 100%;
-  height: 46px;
+  left: 8%;
+  right: 8%;
+  height: 1px;
   transform: translateY(-50%);
 }
-
-.vial.cross .tube.v {
-  position: absolute;
+.vial.round .crosshair::after {
   left: 50%;
-  top: 0;
-  height: 100%;
-  width: 46px;
+  top: 8%;
+  bottom: 8%;
+  width: 1px;
   transform: translateX(-50%);
+}
+
+.vial.round .ring-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 66px;
+  height: 66px;
+  margin: -33px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .bubble {
@@ -240,12 +230,12 @@ h1 {
   transform: translateY(0);
 }
 
-.vial.cross .bubble {
+.vial.round .bubble {
   top: 50%;
   left: 50%;
-  width: 36px;
-  height: 36px;
-  margin: -18px;
+  width: 34px;
+  height: 34px;
+  margin: -17px;
   transform: translate(0, 0);
   z-index: 1;
 }

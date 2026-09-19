@@ -12,9 +12,10 @@ const readoutX = document.getElementById('readoutX');
 const readoutY = document.getElementById('readoutY');
 const readoutZ = document.getElementById('readoutZ');
 
-const CROSS_TRAVEL_PX = 45;
+const ROUND_TRAVEL_PX = 58;
 const VERTICAL_TRAVEL_PX = 55;
-const ANGLE_FOR_FULL_TRAVEL = 12;
+const ANGLE_FOR_FULL_TRAVEL_ROUND = 12;
+const ANGLE_FOR_FULL_TRAVEL_VERTICAL = 45;
 const LEVEL_TOLERANCE_DEG = 0.5;
 
 const STORAGE_KEY = 'suijunki-calibration';
@@ -48,8 +49,8 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function angleToOffset(angleDeg, travelPx) {
-  const ratio = clamp(angleDeg / ANGLE_FOR_FULL_TRAVEL, -1, 1);
+function angleToOffset(angleDeg, angleForFullTravel, travelPx) {
+  const ratio = clamp(angleDeg / angleForFullTravel, -1, 1);
   return -ratio * travelPx;
 }
 
@@ -59,17 +60,24 @@ function setReadout(readoutEl, angleDeg) {
   readoutEl.classList.toggle('ok', Math.abs(angleDeg) < LEVEL_TOLERANCE_DEG);
 }
 
-function setCrossVial(bubbleEl, rowEl, rollAngle, pitchAngle) {
-  const offsetX = angleToOffset(rollAngle, CROSS_TRAVEL_PX);
-  const offsetY = angleToOffset(pitchAngle, CROSS_TRAVEL_PX);
-  bubbleEl.style.transform = `translate(${offsetX.toFixed(1)}px, ${offsetY.toFixed(1)}px)`;
+// 円形バイアル: 気泡は皿の外周からはみ出さないよう、ベクトルの長さで丸くクランプする
+function setRoundVial(bubbleEl, rowEl, rollAngle, pitchAngle) {
+  let vx = -rollAngle / ANGLE_FOR_FULL_TRAVEL_ROUND;
+  let vy = -pitchAngle / ANGLE_FOR_FULL_TRAVEL_ROUND;
+  const magnitude = Math.hypot(vx, vy);
+  if (magnitude > 1) {
+    vx /= magnitude;
+    vy /= magnitude;
+  }
 
-  const isLevel = Math.abs(rollAngle) < LEVEL_TOLERANCE_DEG && Math.abs(pitchAngle) < LEVEL_TOLERANCE_DEG;
+  bubbleEl.style.transform = `translate(${(vx * ROUND_TRAVEL_PX).toFixed(1)}px, ${(vy * ROUND_TRAVEL_PX).toFixed(1)}px)`;
+
+  const isLevel = Math.hypot(rollAngle, pitchAngle) < LEVEL_TOLERANCE_DEG;
   rowEl.classList.toggle('is-level', isLevel);
 }
 
-function setVial(bubbleEl, readoutEl, rowEl, angleDeg, travelPx) {
-  bubbleEl.style.transform = `translateY(${angleToOffset(angleDeg, travelPx).toFixed(1)}px)`;
+function setVial(bubbleEl, readoutEl, rowEl, angleDeg, angleForFullTravel, travelPx) {
+  bubbleEl.style.transform = `translateY(${angleToOffset(angleDeg, angleForFullTravel, travelPx).toFixed(1)}px)`;
   setReadout(readoutEl, angleDeg);
   rowEl.classList.toggle('is-level', Math.abs(angleDeg) < LEVEL_TOLERANCE_DEG);
 }
@@ -86,10 +94,10 @@ function handleOrientation(event) {
   const pitchAngle = event.beta - calibration.beta;
   const plumbAngle = (event.beta - 90) - calibration.beta;
 
-  setCrossVial(bubbleXY, rowXY, rollAngle, pitchAngle);
+  setRoundVial(bubbleXY, rowXY, rollAngle, pitchAngle);
   setReadout(readoutX, rollAngle);
   setReadout(readoutY, pitchAngle);
-  setVial(bubbleZ, readoutZ, rowZ, plumbAngle, VERTICAL_TRAVEL_PX);
+  setVial(bubbleZ, readoutZ, rowZ, plumbAngle, ANGLE_FOR_FULL_TRAVEL_VERTICAL, VERTICAL_TRAVEL_PX);
 }
 
 function startLevel() {
